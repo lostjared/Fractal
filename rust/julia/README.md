@@ -9,4 +9,4 @@ Accepted Arguments:
 
 Example:
 
-    $ cargo run --release -- --output=test.png --res=1280,720 --iter=500 --param=-0.7269,-0.189245125
+    $ cargo run --release -- --output=test.png --res=640,480 --iter=500 --param=0.355,0.355
