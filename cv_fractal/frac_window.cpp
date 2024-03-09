@@ -1,5 +1,6 @@
 #include"frac_window.hpp"
 #include<QLabel>
+#include<QFileDialog>
 
 //0.743643887032151,0.142625924205330 1900 100 8
 
@@ -68,4 +69,11 @@ void MainWindow::Generate() {
 
 void MainWindow::Save() {
 
+    if(cp_.empty())
+        return;
+
+    QString filename = QFileDialog::getSaveFileName(this,tr("Save Image"), "", tr("image files (*.png *.jpg"));
+    if(filename != "") {
+        cv::imwrite(filename.toStdString(), cp_);
+    }
 }
