@@ -10,6 +10,20 @@ namespace frac {
     int MAX_ITER=80;
     void DrawFractal(cv::Mat &frame, double start, double end, double im_start, double im_end,int thread_count);
     int mandelbrot(const std::complex<double> &c);
+    std::vector<cv::Vec3b> color_palette;
+    void load_pal();
+}
+
+
+void frac::load_pal() {
+    std::srand(time(0));
+    color_palette.resize(MAX_ITER);
+    for(int i = 0; i < MAX_ITER; ++i) {
+        unsigned char r = std::rand() % 256;
+        unsigned char g = std::rand() % 256;
+        unsigned char b = std::rand() % 256;
+        color_palette[i] = cv::Vec3b(b, g, r);
+    }
 }
 
 bool splitDoublePair(const std::string &value, const std::string &sep, double &val1, double &val2) {
@@ -59,10 +73,6 @@ void UseMultipleThreads(cv::Mat &frame, int cores, F func) {
 
 void frac::DrawFractal(cv::Mat &frame, double start, double end, double im_start, double im_end, int thread_count) {
     int width=frame.cols, height=frame.rows;
-    /*double start = -2.0;
-    double end = 2;
-    double im_start = -1.0;
-    double im_end = 1;*/
     static auto callback = [&](cv::Mat *frame, int offset, int cols, int size) {
         for(int z = offset; z <  offset+size; ++z) {
             for(int i = 0; i < cols; ++i) {
@@ -71,11 +81,13 @@ void frac::DrawFractal(cv::Mat &frame, double start, double end, double im_start
                 double h = (double(z)/double(height));
                 std::complex<double> c(start + w * (end - start), im_start + h * (im_end - im_start));
                 int n = mandelbrot(c);
-                unsigned char color = static_cast<unsigned char>(255-(n * 255 / MAX_ITER));
-                
-                pixel[0] = color;
-                pixel[1] = color;
-                pixel[2] = color;
+                if (n == MAX_ITER) {
+                    pixel[0] = 0;
+                    pixel[1] = 0;
+                    pixel[2] = 0;
+                } else {
+                    pixel = color_palette[n];
+                }
             }
         }
     };
@@ -84,12 +96,12 @@ void frac::DrawFractal(cv::Mat &frame, double start, double end, double im_start
 
 int main(int argc, char **argv) {
     
-    if(argc != 7) {
+    if(argc != 9) {
         std::cerr << "Error invalid arguments..\n";
-        std::cerr << "arguments:\n mandelbrot output.png WidthxHeight upperleft_start,upperleft_stop, lowerright_start,lowerright_stop iterations thread_count\n";
+        std::cerr << "arguments:\n mandelbrot output.png WidthxHeight upperleft_start,upperleft_stop, lowerright_start,lowerright_stop center_real,center_imag zoom iterations thread_count\n";
         exit(EXIT_FAILURE);
     }
-    
+        
     std::string filename = argv[1];
     
     int width = 0, height = 0;
@@ -98,10 +110,12 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
     
-    int iterations = atoi(argv[5]);
+    int iterations = atoi(argv[7]);
     std::string left = argv[3];
     std::string right = argv[4];
-    int tc = atoi(argv[6]);
+    std::string center = argv[5];
+    std::string zoom_l = argv[6];
+    int tc = atoi(argv[8]);
     
     double start = 0, end = 0, im_start = 0, im_end = 0;
     if(!splitDoublePair(left, ",", start, end)) {
@@ -113,6 +127,14 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
+    double center_real = 0, center_imag = 0;
+    if(!splitDoublePair(center, ",", center_real, center_imag)) {
+        std::cerr << "Error invalid center ..\n";
+        exit(EXIT_FAILURE);
+    }
+    
+    double zoom_ = atof(zoom_l.c_str());
+    
     
     if(width <= 32 || height <= 32 || iterations <= 0 || tc < 1) {
         std::cerr << "invalid arguments...\n";
@@ -122,7 +144,18 @@ int main(int argc, char **argv) {
     if(iterations > 0)
         frac::MAX_ITER = iterations;
     
-    std::cout << "creating: " << filename << " " << width << "x" << height << " threads: " << tc << "\n";
+    frac::load_pal();
+     
+    double aspect_ratio = static_cast<double>(width) / height;
+    double range_real = 4.0 / zoom_; // Adjusted for zoom level. Original range is 4
+    double range_imag = range_real / aspect_ratio;
+
+    start = center_real - range_real / 2;
+    end = center_real + range_real / 2;
+    im_start = center_imag - range_imag / 2;
+    im_end = center_imag + range_imag / 2;
+    
+    std::cout << "creating: " << filename << " " << width << "x" << height << " threads: " << tc << " max_iter: " << frac::MAX_ITER << "\n";
     
     cv::Mat m;
     m.create(cv::Size(width, height), CV_8UC3);

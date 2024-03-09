@@ -4,5 +4,7 @@ Use:
 
 arguments:
 
-    mandelbrot output.png WidthxHeight upperleft_start,upperleft_stop, lowerright_start,lowerright_stop iterations thread_count
+    mandelbrot output.png WidthxHeight upperleft_start,upperleft_stop, 
+lowerright_start,lowerright_stop center_real,center_imag zoom iterations 
+thread_count
 
