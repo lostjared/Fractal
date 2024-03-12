@@ -48,7 +48,7 @@
     input_cores->setText("8");
     input_width->setText("1920");
     input_height->setText("1080");
-
+    cv::namedWindow("window1");
  }
 
 void MainWindow::Generate() {
@@ -65,6 +65,7 @@ void MainWindow::Generate() {
     fractal.draw(m);
     cv::imshow("window1", m);
     cp_ = m.clone();
+    cv::waitKey(10);
 }
 
 void MainWindow::Save() {
