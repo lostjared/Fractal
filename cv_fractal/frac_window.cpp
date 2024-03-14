@@ -62,6 +62,7 @@ void MainWindow::Generate() {
     int it = atoi(input_iterations->text().toStdString().c_str());
     int c = atoi(input_cores->text().toStdString().c_str());
     fractal.initParameters(r, i, z, it, c);
+    fractal.resetPalette();
     fractal.draw(m);
     cv::imshow("window1", m);
     cp_ = m.clone();
