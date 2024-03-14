@@ -44,7 +44,7 @@
     input_real->setText("-0.743643887032151");
     input_imag->setText("0.142625924205330");
     input_zoom->setText("1900");
-    input_iterations->setText("100");
+    input_iterations->setText("150");
     input_cores->setText("8");
     input_width->setText("1920");
     input_height->setText("1080");
