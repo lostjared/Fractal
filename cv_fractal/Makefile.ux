@@ -3,11 +3,12 @@ CFLAGS= -std=c++17 `pkg-config opencv4 --cflags`
 LDFLAGS= `pkg-config opencv4 --libs`
 
 
-$(PROGRAM):
-	$(CXX) -o $(PROGRAM) $(CFLAGS)  main.cpp $(LDFLAGS)
-
 all: $(PROGRAM)
 
-.PHONY: clean
+$(PROGRAM): main.cpp
+	$(CXX) -o $(PROGRAM) $(CFLAGS)  main.cpp $(LDFLAGS)
+
+.PHONY: all clean
+
 clean:
 	rm -f $(PROGRAM) *.o

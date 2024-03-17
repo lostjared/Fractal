@@ -5,7 +5,7 @@
 class splitException {};
 
 std::pair<double, double> splitPair(std::string_view src, std::string_view sep) {
-    auto pos = src.find(sep);
+    const auto pos = src.find(sep);
     if(pos == std::string::npos)
         throw splitException{};
     std::string left, right;
@@ -26,6 +26,7 @@ int main(int argc, char **argv) {
         std::cerr << "arguments:\nWidthXHeight Real,Imag Zoom Iter Cores\n";
         return 0;
     }
+
     try {
         std::string_view img_size = argv[1];
         std::string_view real_size = argv[2];
