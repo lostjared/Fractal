@@ -49,6 +49,8 @@ int main(int argc, char **argv) {
         cv::imwrite(fname, m);
     } catch(const splitException &e) {
         std::cerr << "Exception has occoured...\n";
+    } catch (...) {
+        std::cerr << "Genereal exception has ocurred...\n";
     }
     return 0;
 }
