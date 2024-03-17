@@ -21,8 +21,8 @@ std::pair<double, double> splitPair(std::string_view src, std::string_view sep) 
 
 
 int main(int argc, char **argv) {
-    if(argc != 6) {
-        std::cerr << "arguments:\nWidthXHeight Real,Imag Zoom Iter Cores\n";
+    if(argc != 7) {
+        std::cerr << "arguments:\nWidthXHeight Real,Imag Zoom Iter Cores output.png\n";
         return 0;
     }
 
@@ -32,12 +32,13 @@ int main(int argc, char **argv) {
         std::string zoom_info = argv[3];
         std::string iter_info = argv[4];
         std::string core_info = argv[5];
+        const std::string fname = argv[6];
         const std::pair<double, double> isize = splitPair(img_size, "x");
         const std::pair<double, double> m_values = splitPair(real_size, ",");
         const double zoom_value = atof(zoom_info.c_str());
         const int iter_value = atoi(iter_info.c_str());
         const int core_value = atoi(core_info.c_str());
-        std::cout << "Fractal: "  << static_cast<int>(isize.first) << "x" << static_cast<int>(isize.second) << " "  << m_values.first << "," << m_values.second << " " << zoom_value << " " << iter_value << " " << core_value << "\n";
+        std::cout << "[ " <<  fname << " ]: Fractal -> "  << static_cast<int>(isize.first) << "x" << static_cast<int>(isize.second) << " "  << m_values.first << "," << m_values.second << " " << zoom_value << " " << iter_value << " " << core_value << "\n";
         //-0.743643887032151
         //0.142625924205330
         cv::Mat m;
@@ -46,7 +47,7 @@ int main(int argc, char **argv) {
         cvfrac.initParameters(m_values.first,m_values.second, zoom_value, iter_value, core_value);
         cvfrac.resetPalette();
         cvfrac.draw(m);
-        cv::imwrite("output.png", m);
+        cv::imwrite(fname, m);
     } catch(splitException &e) {
         std::cerr << "Exception has occoured...\n";
     }
