@@ -1,13 +1,10 @@
-OBJ=$(patsubst %.cpp,%.o,$(wildcard *.cpp))
 PROGRAM=cv-mandelbrot
 CFLAGS= -std=c++17 `pkg-config opencv4 --cflags` 
 LDFLAGS= `pkg-config opencv4 --libs`
 
-%.o: %.cpp
-	$(CXX) $(CFLAGS) $< -c -o $@
 
-$(PROGRAM): $(OBJ)
-	$(CXX) -o $(PROGRAM) $(OBJ) $(LDFLAGS)
+$(PROGRAM):
+	$(CXX) -o $(PROGRAM) $(CFLAGS)  main.cpp $(LDFLAGS)
 
 all: $(PROGRAM)
 
