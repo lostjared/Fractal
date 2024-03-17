@@ -25,7 +25,6 @@ int main(int argc, char **argv) {
         std::cerr << "arguments:\nWidthXHeight Real,Imag Zoom Iter Cores output.png\n";
         return 0;
     }
-
     try {
         std::string_view img_size = argv[1];
         std::string_view real_size = argv[2];
@@ -48,7 +47,7 @@ int main(int argc, char **argv) {
         cvfrac.resetPalette();
         cvfrac.draw(m);
         cv::imwrite(fname, m);
-    } catch(splitException &e) {
+    } catch(const splitException &e) {
         std::cerr << "Exception has occoured...\n";
     }
     return 0;
