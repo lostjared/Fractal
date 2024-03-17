@@ -26,11 +26,11 @@ int main(int argc, char **argv) {
         return 0;
     }
     try {
-        std::string_view img_size = argv[1];
-        std::string_view real_size = argv[2];
-        std::string zoom_info = argv[3];
-        std::string iter_info = argv[4];
-        std::string core_info = argv[5];
+        const std::string_view img_size = argv[1];
+        const std::string_view real_size = argv[2];
+        const std::string zoom_info = argv[3];
+        const std::string iter_info = argv[4];
+        const std::string core_info = argv[5];
         const std::string fname = argv[6];
         const std::pair<double, double> isize = splitPair(img_size, "x");
         const std::pair<double, double> m_values = splitPair(real_size, ",");
